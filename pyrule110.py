@@ -10,14 +10,14 @@ gens_to_sim      = 30
 file_out_path    = '110_out.txt'
 
 RULE = {
-    '111': 0b0, 
-    '110': 0b1, 
-    '101': 0b1, 
-    '100': 0b0, 
-    '011': 0b1,
-    '010': 0b1,
-    '001': 0b1,
-    '000': 0b0
+    '111': 0, 
+    '110': 1, 
+    '101': 1, 
+    '100': 0, 
+    '011': 1,
+    '010': 1,
+    '001': 1,
+    '000': 0
 }
 
 def format_line(gen: list[int]):
@@ -42,15 +42,22 @@ def generate() -> list[str]:
 
     for i in range(generations):
         for i, x in enumerate(this_gen):
+            """ if i > 0 and i < len(this_gen)-1:
+                next_gen[i] = RULE.get(str(this_gen[i-1]) + str(x) +  str(this_gen[i+1])) 
+            else:
+                next_gen[i] = RULE.get(str(this_gen[:-1]) + str(x) +  str(this_gen[:1])) """
+
             if i == 0:
-                next_gen[0] = RULE.get(str(x) + str(this_gen[1]) + str(this_gen[2]))
+                #next_gen[0] = RULE.get(str(x) + str(this_gen[1]) + str(this_gen[2]))
+                next_gen[0] = RULE.get('0' + str(x) + str(this_gen[1]))
             elif i == (size-1):
-                next_gen[i] = RULE.get(str(this_gen[i-2]) + str(this_gen[i-1]) + str(x))
+                #next_gen[i] = RULE.get(str(this_gen[i-2]) + str(this_gen[i-1]) + str(x))
+                next_gen[i] = RULE.get(str(this_gen[i-1]) + str(x) + '0')
             else:
                 next_gen[i] = RULE.get(str(this_gen[i-1]) + str(x) +  str(this_gen[i+1]))
        
         buf.append(format_line(next_gen))
-        this_gen = next_gen
+        this_gen = next_gen.copy()
     
     write_outfile(buf)
 
@@ -119,13 +126,11 @@ def make_outdir():
     if(not os.path.exists(pwd+'/output')):
         os.mkdir('output')
 
+
 def main():
     check_flags()
     make_outdir()
     generate()
-    
-
-
 
 
 

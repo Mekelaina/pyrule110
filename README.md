@@ -17,4 +17,3 @@ that should get you started.
 
 <br>
 
-## WIP trying to figure out a bug. see test.txt for incorect output
